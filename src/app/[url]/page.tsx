@@ -3,28 +3,7 @@ import { getFeed } from "@/utils/request";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-export interface Feed {
-  items: Item[];
-  feedUrl: string;
-  title: string;
-  description: string;
-  webMaster: string;
-  generator: string;
-  link: string;
-  language: string;
-  lastBuildDate: string;
-  ttl: string;
-}
-
-export interface Item {
-  title: string;
-  link: string;
-  pubDate: string;
-  content: string;
-  contentSnippet: string;
-  guid: string;
-  isoDate: Date;
-}
+export const revalidate = 0;
 
 const Time = dynamic(() => import("../../components/Time"), { ssr: false });
 

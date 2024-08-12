@@ -1,28 +1,7 @@
 import { decodeBase64, md5 } from "@/utils/crypto";
 import { getFeed } from "@/utils/request";
 
-export interface Feed {
-  items: Item[];
-  feedUrl: string;
-  title: string;
-  description: string;
-  webMaster: string;
-  generator: string;
-  link: string;
-  language: string;
-  lastBuildDate: string;
-  ttl: string;
-}
-
-export interface Item {
-  title: string;
-  link: string;
-  pubDate: string;
-  content: string;
-  contentSnippet: string;
-  guid: string;
-  isoDate: Date;
-}
+export const revalidate = 0;
 
 export default async function Page({
   params: { id, url },
