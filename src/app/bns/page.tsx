@@ -59,13 +59,25 @@ async function getPost(url: string): Promise<Item> {
 async function getFeed(): Promise<Feed> {
   const baseUrl = 'https://bns.qq.com'
 
-  const posts = await getPosts('/webplat/info/news_version3/1298/61649/m22759/list_1.shtml', baseUrl)
+  const currentUrl = new URL('/webplat/info/news_version3/1298/61649/m22759/list_1.shtml', baseUrl).toString()
 
-  const items = await Promise.all(posts.flatMap(i => i.urls).map(getPost))
+  const response = await fetch(currentUrl)
+  const date = response.headers.get('date')
+  const buf = await response.arrayBuffer()
+
+  const {
+    window: { document },
+  } = new JSDOM(buf)
+
+  const urls = Array.from(document.querySelectorAll<HTMLAnchorElement>('.pg1_box2 ul li a')).map(item =>
+    new URL(item.getAttribute('href') || '/', baseUrl).toString(),
+  )
+
+  const items = await Promise.all(urls.map(getPost))
 
   return {
-    title: posts[0].title,
-    lastBuildDate: posts[0].lastBuildDate,
+    title: document.title,
+    lastBuildDate: date ? dayjs(date).toDate() : new Date(),
     items: orderBy(items, ['date'], ['desc']),
   }
 }
