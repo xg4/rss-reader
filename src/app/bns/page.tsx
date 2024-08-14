@@ -1,41 +1,16 @@
 import List from '@/components/List'
 import Time from '@/components/Time'
-import { Feed, Item, Post } from '@/types'
+import { Feed, Item } from '@/types'
 import { md5 } from '@/utils/crypto'
 import { tz } from '@/utils/time'
 import dayjs from 'dayjs'
 import { JSDOM } from 'jsdom'
 import { orderBy } from 'lodash-es'
 
-export const revalidate = 0
-
-async function getPosts(url: string, baseUrl: string): Promise<Post[]> {
-  const currentUrl = new URL(url, baseUrl).toString()
-
-  const response = await fetch(currentUrl)
-  const date = response.headers.get('date')
-  const buf = await response.arrayBuffer()
-
-  const {
-    window: { document },
-  } = new JSDOM(buf)
-
-  const urls = Array.from(document.querySelectorAll<HTMLAnchorElement>('.pg1_box2 ul li a')).map(item =>
-    new URL(item.getAttribute('href') || '/', baseUrl).toString(),
-  )
-
-  const cur = [{ title: document.title, lastBuildDate: date ? dayjs(date).toDate() : new Date(), urls }]
-  const nextPage = document.querySelector('.pg1_btnbox2 a:nth-child(3)')?.getAttribute('href')
-  if (nextPage) {
-    const prev = await getPosts(nextPage, baseUrl)
-    return [...cur, ...prev]
-  }
-
-  return cur
-}
+export const revalidate = 60
 
 async function getPost(url: string): Promise<Item> {
-  const detailResponse = await fetch(url)
+  const detailResponse = await fetch(url, { next: { revalidate: 60 * 60 } })
   const buf = await detailResponse.arrayBuffer()
 
   const {
@@ -63,7 +38,7 @@ async function getFeed(): Promise<Feed> {
 
   const currentUrl = new URL('/webplat/info/news_version3/1298/61649/m22759/list_1.shtml', baseUrl).toString()
 
-  const response = await fetch(currentUrl)
+  const response = await fetch(currentUrl, { next: { revalidate: 60 } })
   const date = response.headers.get('date')
   const buf = await response.arrayBuffer()
 

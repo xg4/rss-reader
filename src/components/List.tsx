@@ -5,6 +5,7 @@ import { fromNow, tz } from '@/utils/time'
 import { AnimatePresence, motion } from 'framer-motion'
 import { groupBy } from 'lodash-es'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useScrollLock } from 'usehooks-ts'
 
 export default function List({ list, selectedId }: { list: Item[]; selectedId?: string }) {
@@ -13,6 +14,7 @@ export default function List({ list, selectedId }: { list: Item[]; selectedId?: 
   useScrollLock({
     autoLock: !!current,
   })
+  const pathname = usePathname()
 
   return (
     <>
@@ -27,8 +29,9 @@ export default function List({ list, selectedId }: { list: Item[]; selectedId?: 
                   <motion.h2 className="my-0 line-clamp-1 text-base">
                     <Link
                       scroll={false}
+                      prefetch
                       href={{
-                        pathname: '/bns',
+                        pathname,
                         query: {
                           q: item.guid,
                         },
