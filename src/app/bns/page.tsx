@@ -1,11 +1,11 @@
 import List from '@/components/List'
-import Time from '@/components/Time'
 import { Feed, Item } from '@/types'
 import { md5 } from '@/utils/crypto'
 import { tz } from '@/utils/time'
 import dayjs from 'dayjs'
 import { JSDOM } from 'jsdom'
 import { orderBy } from 'lodash-es'
+import type { Metadata } from 'next'
 
 export const revalidate = 60
 
@@ -59,7 +59,23 @@ async function getFeed(): Promise<Feed> {
   }
 }
 
-export default async function Page({ searchParams }: { searchParams: { q?: string } }) {
+type Props = {
+  searchParams: { q?: string }
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const q = searchParams.q
+
+  const feed = await getFeed()
+
+  const current = feed.items.find(i => i.guid === q)
+
+  return {
+    title: current ? current.title : feed.title,
+  }
+}
+
+export default async function Page({ searchParams }: Props) {
   const feed = await getFeed()
 
   return (
