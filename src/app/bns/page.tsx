@@ -1,6 +1,7 @@
 import List from '@/components/List'
 import Time from '@/components/Time'
 import { Feed, Item, Post } from '@/types'
+import { md5 } from '@/utils/crypto'
 import { tz } from '@/utils/time'
 import dayjs from 'dayjs'
 import { JSDOM } from 'jsdom'
@@ -48,6 +49,7 @@ async function getPost(url: string): Promise<Item> {
 
   return {
     url,
+    guid: md5(url),
     title: contentEl?.querySelector('.pg2_txt1')?.textContent || '',
     date,
     htmlContent: contentEl?.innerHTML,
@@ -82,14 +84,14 @@ async function getFeed(): Promise<Feed> {
   }
 }
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: { q?: string } }) {
   const feed = await getFeed()
 
   return (
     <div className="prose prose-slate mx-auto break-all p-5 dark:prose-invert">
       <h1>{feed.title}</h1>
       <Time className="text-xs" dateTime={feed.lastBuildDate}></Time>
-      <List list={feed.items} />
+      <List list={feed.items} selectedId={searchParams.q} />
     </div>
   )
 }

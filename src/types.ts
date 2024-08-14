@@ -12,6 +12,7 @@ export interface Post {
 
 export interface Item {
   title: string
+  guid: string
   url: string
   date: Date
   htmlContent?: string | null
