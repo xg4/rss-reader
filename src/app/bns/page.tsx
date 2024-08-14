@@ -63,10 +63,8 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
   const feed = await getFeed()
 
   return (
-    <div className="prose prose-slate mx-auto break-all p-5 dark:prose-invert">
-      <h1>{feed.title}</h1>
-      <Time className="text-xs" dateTime={feed.lastBuildDate}></Time>
-      <List list={feed.items} selectedId={searchParams.q} />
-    </div>
+    <main className="prose prose-slate mx-auto break-all p-5 dark:prose-invert">
+      <List feed={feed} selectedId={searchParams.q} />
+    </main>
   )
 }
