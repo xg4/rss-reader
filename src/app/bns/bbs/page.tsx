@@ -2,10 +2,10 @@ import { JSDOM } from 'jsdom'
 import { Metadata } from 'next'
 import Link from 'next/link'
 
-async function getFeed(page = 1) {
+async function getFeed({ searchParams }: Props) {
   const baseUrl = 'https://bbs.bns.qq.com'
   const currentUrl = new URL('/forum.php?mod=forumdisplay&fid=79', baseUrl)
-  currentUrl.searchParams.set('page', page + '')
+  Object.entries(searchParams).forEach(([key, value]) => currentUrl.searchParams.set(key, value))
   const response = await fetch(currentUrl, { next: { revalidate: 60 } })
   const date = response.headers.get('date')
   const buf = await response.arrayBuffer()
@@ -31,20 +31,24 @@ async function getFeed(page = 1) {
   return { title: document.title, items }
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { title } = await getFeed()
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { title } = await getFeed(props)
 
   return {
     title,
   }
 }
 
-export default async function Page() {
-  const [post, post2] = await Promise.all([getFeed(1), getFeed(2)])
+type Props = {
+  searchParams: { [key: string]: string }
+}
+
+export default async function Page(props: Props) {
+  const { items } = await getFeed(props)
   return (
     <main>
       <ul>
-        {[...post.items, ...post2.items].map(i => (
+        {items.map(i => (
           <li key={i.guid}>
             <Link href={`/bns/bbs/${i.guid}`}>{i.title}</Link>
           </li>
