@@ -53,12 +53,7 @@ export default function List({ feed, selectedId }: { feed: Feed; selectedId?: st
         </>
       ) : (
         <AnimatePresence>
-          <motion.article
-            layoutId={current.url}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-          >
+          <motion.article layoutId={current.url}>
             <motion.h1>{current.title}</motion.h1>
             {current.htmlContent ? (
               <motion.section

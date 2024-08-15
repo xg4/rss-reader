@@ -8,13 +8,11 @@ export default async function Page() {
     },
   ]
   return (
-    <main className="prose prose-slate dark:prose-invert">
+    <main className="prose prose-slate mx-auto dark:prose-invert">
       <ul>
         {routes.map(i => (
           <li key={i.name}>
-            <Link prefetch href={i.url}>
-              {i.name}
-            </Link>
+            <Link href={i.url}>{i.name}</Link>
           </li>
         ))}
       </ul>
