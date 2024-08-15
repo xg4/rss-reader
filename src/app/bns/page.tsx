@@ -4,14 +4,14 @@ import { md5 } from '@/utils/crypto'
 import { tz } from '@/utils/time'
 import dayjs from 'dayjs'
 import { JSDOM } from 'jsdom'
-import { orderBy } from 'lodash-es'
+import { compact, head, orderBy } from 'lodash-es'
 import type { Metadata } from 'next'
 
 export const revalidate = 60
 
 async function getPost(url: string): Promise<Item> {
-  const detailResponse = await fetch(url, { next: { revalidate: 60 * 60 } })
-  const buf = await detailResponse.arrayBuffer()
+  const response = await fetch(url, { next: { revalidate: 60 * 60 } })
+  const buf = await response.arrayBuffer()
 
   const {
     window: { document },
@@ -22,14 +22,26 @@ async function getPost(url: string): Promise<Item> {
   const time = contentEl?.querySelector('.pg2_txt2')?.textContent
   const date = time ? tz(time).toDate() : new Date()
 
+  const title = contentEl?.querySelector('.pg2_txt1')?.textContent || ''
+  const innerEl = contentEl?.querySelector('.pg2_box1ct1:nth-child(2)')
+  const htmlContent = innerEl?.innerHTML || ''
+  const textContent = innerEl?.textContent || ''
+  const images = compact(Array.from(contentEl?.querySelectorAll('img') || []).map(i => i.getAttribute('src'))).map(
+    u => {
+      if (/^(https?:\/\/|\/\/)/.test(u)) {
+        return u
+      }
+      return new URL(u, new URL(url).origin).toString()
+    },
+  )
   return {
     url,
     guid: md5(url),
-    title: contentEl?.querySelector('.pg2_txt1')?.textContent || '',
+    title,
     date,
-    htmlContent: contentEl?.innerHTML,
-    textContent: contentEl?.querySelector('.pg2_box1ct1:nth-child(2)')?.textContent,
-    image: contentEl?.querySelector('img')?.getAttribute('src'),
+    htmlContent,
+    textContent,
+    image: head(images),
   }
 }
 

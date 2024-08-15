@@ -2,6 +2,7 @@
 
 import { Feed } from '@/types'
 import { fromNow, tz } from '@/utils/time'
+import dayjs from 'dayjs'
 import { AnimatePresence, motion } from 'framer-motion'
 import { groupBy } from 'lodash-es'
 import Link from 'next/link'
@@ -43,7 +44,7 @@ export default function List({ feed, selectedId }: { feed: Feed; selectedId?: st
                       <motion.time className="text-xs" dateTime={item.date.toUTCString()}>
                         {fromNow(item.date)}
                       </motion.time>
-                      <motion.div className="line-clamp-3 text-sm">{item.textContent}</motion.div>
+                      <motion.p className="line-clamp-3 text-sm">{item.textContent}</motion.p>
                     </motion.div>
                   </motion.div>
                 ))}
@@ -55,6 +56,9 @@ export default function List({ feed, selectedId }: { feed: Feed; selectedId?: st
         <AnimatePresence>
           <motion.article layoutId={current.url}>
             <motion.h1>{current.title}</motion.h1>
+            <motion.time className="text-xs" dateTime={current.date.toUTCString()}>
+              {dayjs(current.date).format('YYYY-MM-DD HH:mm:ss')}
+            </motion.time>
             {current.htmlContent ? (
               <motion.section
                 dangerouslySetInnerHTML={{

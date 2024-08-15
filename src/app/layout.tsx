@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { PropsWithChildren } from 'react'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -21,14 +22,10 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="zh-cn">
-      <body className="bg-white text-slate-500 antialiased dark:bg-slate-900 dark:text-slate-400">{children}</body>
+      <body className="bg-white text-slate-600 antialiased dark:bg-slate-900 dark:text-slate-400">{children}</body>
     </html>
   )
 }
