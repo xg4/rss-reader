@@ -51,6 +51,7 @@ export default async function Page(props: Props) {
         {items.map(i => (
           <li key={i.guid}>
             <Link href={`/bns/bbs/${i.guid}`}>{i.title}</Link>
+            <span className="text-xs"> ~ {i.type}</span>
           </li>
         ))}
       </ul>

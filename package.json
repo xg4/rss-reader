@@ -1,7 +1,18 @@
 {
-  "name": "rss-reader",
+  "name": "rss-web-next",
   "version": "0.1.0",
   "private": true,
+  "description": "RSS Web Next",
+  "homepage": "https://github.com/xg4/rss-web-next#readme",
+  "bugs": {
+    "url": "https://github.com/xg4/rss-web-next/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xg4/rss-web-next.git"
+  },
+  "license": "MIT",
+  "author": "xg4 <xingor4@gmail.com>",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
