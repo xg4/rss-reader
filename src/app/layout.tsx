@@ -25,7 +25,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="zh-cn">
-      <body className="bg-white text-slate-600 antialiased dark:bg-slate-900 dark:text-slate-400">{children}</body>
+      <body className="prose prose-slate mx-auto break-all bg-white p-5 text-slate-600 antialiased dark:prose-invert dark:bg-slate-900 dark:text-slate-400">
+        {children}
+      </body>
     </html>
   )
 }

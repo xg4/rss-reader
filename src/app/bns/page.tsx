@@ -91,7 +91,7 @@ export default async function Page({ searchParams }: Props) {
   const feed = await getFeed()
 
   return (
-    <main className="prose prose-slate mx-auto break-all p-5 dark:prose-invert">
+    <main>
       <List feed={feed} selectedId={searchParams.q} />
     </main>
   )

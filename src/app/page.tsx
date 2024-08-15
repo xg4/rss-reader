@@ -8,7 +8,7 @@ export default async function Page() {
     },
   ]
   return (
-    <main className="prose prose-slate mx-auto dark:prose-invert">
+    <main>
       <ul>
         {routes.map(i => (
           <li key={i.name}>
