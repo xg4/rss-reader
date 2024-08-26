@@ -28,14 +28,15 @@ async function getFeed({ searchParams }: Props) {
     }
   })
 
-  return { title: document.title, items }
+  return { title: document.title, items, date }
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { title } = await getFeed(props)
+  const { title, date } = await getFeed(props)
 
   return {
     title,
+    description: [title, date].join(' - '),
   }
 }
 

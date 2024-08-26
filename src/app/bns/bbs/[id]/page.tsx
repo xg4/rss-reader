@@ -45,11 +45,11 @@ async function getPost(id: string) {
       id,
       avatar: avatar?.getAttribute('src'),
       username: username?.textContent,
-      createdAt: tz(createdAt),
+      createdAt: tz(createdAt).toDate(),
       content: text || '',
     }
   })
-  return { title: document.title, items }
+  return { title: document.title, items, date }
 }
 
 type Props = {
@@ -57,10 +57,11 @@ type Props = {
 }
 
 export async function generateMetadata({ params: { id } }: Props): Promise<Metadata> {
-  const { title } = await getPost(id)
+  const { title, date } = await getPost(id)
 
   return {
     title,
+    description: [title, date].join(' - '),
   }
 }
 
