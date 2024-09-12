@@ -10,11 +10,13 @@ async function getFeed({ searchParams }: Props) {
   const date = response.headers.get('date')
   const buf = await response.arrayBuffer()
 
-  const {
-    window: { document },
-  } = new JSDOM(buf)
+  const { window } = new JSDOM(buf)
 
-  const list = Array.from(document.querySelector('#threadlisttableid')?.querySelectorAll('tbody') || [])
+  const { document } = window
+
+  const list = Array.from(document.querySelector('#threadlisttableid')?.querySelectorAll('tbody') || []).filter(
+    element => window.getComputedStyle(element).display !== 'none',
+  )
 
   const items = list.map(i => {
     const [type, title] = Array.from(i.querySelectorAll<HTMLAnchorElement>('.title a'))
